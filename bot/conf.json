@@ -1,0 +1,6 @@
+{
+  "base_url": "http://localhost",
+  "number_of_users": 10,
+  "max_posts_per_user": 1,
+  "max_likes_per_user": 1
+}
