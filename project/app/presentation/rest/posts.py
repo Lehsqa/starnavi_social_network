@@ -1,12 +1,10 @@
-from datetime import datetime
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request, status
 
 from project.app.application.authentication import JWTBearer, get_current_user
-from project.app.application.posts import create_post, create_like
-from project.app.application.users import update_user
-from project.app.domain.likes import LikePostId, LikePublic, Like, LikesRepository
+from project.app.application.posts import create_post, create_like, delete_like
+from project.app.domain.likes import LikePostId, LikePublic, Like
 from project.app.domain.posts import PostContent, PostPublic, Post
 from project.app.domain.users import User
 
@@ -40,8 +38,7 @@ async def post_unlike(
     _: Request,
     schema: LikePostId,
     current_user: Annotated[User, Depends(get_current_user)]
-):
-    await LikesRepository().destroy(post_id_=schema.post_id, user_id_=current_user.id)
-    await update_user(id=current_user.id, field='last_request', data=datetime.now())
+) -> dict[str, str]:
+    del_like: dict[str, str] = await delete_like(payload=schema.model_dump(), user_id=current_user.id)
 
-    return {'details': f'Like to post_id={schema.post_id} was deleted'}
+    return del_like

@@ -10,7 +10,6 @@ from project.app.domain.authentication import (
     TokenClaimRequestBody,
 )
 from project.app.domain.users import User, UserLogin, UserPublic
-from project.app.infrastructure.errors import DatabaseError
 
 router = APIRouter(prefix="", tags=["Auth"])
 
@@ -32,8 +31,6 @@ async def user_signup(
     _: Request,
     schema: UserLogin,
 ) -> UserPublic:
-    try:
-        user: User = await create_user(payload=schema.model_dump())
-        return UserPublic.model_validate(user)
-    except DatabaseError:
-        raise DatabaseError('Already exist')
+    user: User = await create_user(payload=schema.model_dump())
+
+    return UserPublic.model_validate(user)

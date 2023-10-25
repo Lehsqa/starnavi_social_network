@@ -29,3 +29,11 @@ async def create_like(payload: dict, user_id: int) -> Like:
             LikeUncommited(**payload, user_id=user_id)
         )
         return like
+
+
+async def delete_like(payload: dict, user_id: int) -> dict[str, str]:
+    await LikesRepository().destroy(post_id_=payload.get('post_id'), user_id_=user_id)
+    await update_user(id=user_id, field='last_request', data=datetime.now())
+
+    return {'details': f'Like to post_id={payload.get("post_id")} was deleted'}
+

@@ -7,17 +7,21 @@ from project.app.domain.users import (
     UsersRepository,
     UserUncommited
 )
+from project.app.infrastructure.errors import DatabaseError
 
 
 async def create_user(payload: dict) -> User:
     payload.update(password=get_password_hash(payload["password"]),
                    last_login=datetime.now(),
                    last_request=datetime.now())
+    try:
+        user: User = await UsersRepository().create(
+            UserUncommited(**payload)
+        )
 
-    user: User = await UsersRepository().create(
-        UserUncommited(**payload)
-    )
-    return user
+        return user
+    except DatabaseError:
+        raise DatabaseError('Already exist')
 
 
 async def update_user(id: int, field: str, data: Any):
