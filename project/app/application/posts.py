@@ -36,4 +36,3 @@ async def delete_like(payload: dict, user_id: int) -> dict[str, str]:
     await update_user(id=user_id, field='last_request', data=datetime.now())
 
     return {'details': f'Like to post_id={payload.get("post_id")} was deleted'}
-
