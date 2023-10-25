@@ -8,3 +8,7 @@
 ## Available Paths
 
 ### `http://localhost/docs` - OpenAPI documentation
+
+## Additional information
+
+### In docs page only work authorizations by JWTBearer (Authorize page)
